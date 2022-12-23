@@ -1,4 +1,4 @@
 name: GuiTools
 version: '${version}'
-main: de.kripa.guitools.guitools.GuiTools
+main: de.kripa.guitools.GuiTools
 api-version: 1.19
