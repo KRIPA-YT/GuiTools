@@ -1,15 +1,15 @@
-package de.kripa.guitools.std;
+package de.kripa.guitools.std.element;
 
 import de.kripa.guitools.gui.GUIElement;
+import de.kripa.guitools.gui.GUIElementClickEvent;
+import de.kripa.guitools.std.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 
-public class FillerElement implements GUIElement {
+public class EmptyElement implements GUIElement {
     @Override
-    public boolean onClick(Player player, boolean isLeftClick, InventoryAction action) {
+    public boolean onClick(GUIElementClickEvent e) {
         return false;
     }
 

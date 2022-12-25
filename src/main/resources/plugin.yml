@@ -2,3 +2,11 @@ name: GuiTools
 version: '${version}'
 main: de.kripa.guitools.GuiTools
 api-version: 1.19
+
+commands:
+  guibuilder:
+    description: Opens the GUIBuilder
+    usage: /guibuilder
+  test:
+    description: Test command
+    usage: /test

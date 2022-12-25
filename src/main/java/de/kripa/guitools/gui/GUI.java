@@ -1,17 +1,42 @@
 package de.kripa.guitools.gui;
 
+import de.kripa.guitools.GuiTools;
+import de.kripa.guitools.history.PlayerHistoryEntry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public abstract class GUI {
-    public void openGUI(Player p) {
-        p.openInventory(toInventory());
+public interface GUI extends Cloneable {
+
+    /**
+     * Opens the GUI for a Player
+     * @param p The Player to open the GUI for
+     */
+    default void openGUI(Player p) {
+        GuiTools.historyManager.appendHistory(new PlayerHistoryEntry(p, this));
+        p.openInventory(render(p));
     }
 
-    /** Converts this object to an org.bukkit.inventory.Inventory
+    Object clone() throws CloneNotSupportedException;
+
+    /**
+     * Converts this object to an org.bukkit.inventory.Inventory
      * @return The Inventory
      */
-    protected abstract Inventory toInventory();
+    Inventory render(Player p);
+
+    /**
+     * Updates the Inventory
+     */
+    default void update() {
+
+    };
+
+    String getTitle();
+    void setTitle(String title);
+
+    default String getMeta() {
+        return "";
+    }
 
     /**
      * Sets the GUIElement at the given coordinate
@@ -19,7 +44,7 @@ public abstract class GUI {
      * @param x X-Coordinate
      * @param y Y-Coordinate
      */
-    public void setGUIElement(GUIElement guiElement, int x, int y) {
+    default void setGUIElement(GUIElement guiElement, int x, int y) {
         this.setGUIElement(guiElement, convertXYtoIndex(x, y));
     }
 
@@ -28,7 +53,7 @@ public abstract class GUI {
      * @param guiElement The GUIElement to set
      * @param slot slot
      */
-    public abstract void setGUIElement(GUIElement guiElement, int slot);
+    void setGUIElement(GUIElement guiElement, int slot);
 
     /**
      * Gets the GUIElement at the given coordinate
@@ -36,7 +61,7 @@ public abstract class GUI {
      * @param y Y-Coordinate
      * @return The GUIElement at the given coordinate
      */
-    public GUIElement getGUIElement(int x, int y) {
+    default GUIElement getGUIElement(int x, int y) {
         return this.getGUIElement(convertXYtoIndex(x, y));
     }
 
@@ -45,15 +70,15 @@ public abstract class GUI {
      * @param slot slot
      * @return The GUIElement at the given slot
      */
-    public abstract GUIElement getGUIElement(int slot);
+    GUIElement getGUIElement(int slot);
 
-    protected void checkSlotValidity(int slot, int invSize) {
+    default void checkSlotValidity(int slot, int invSize) {
         if (slot >= invSize) {
             throw new IndexOutOfBoundsException("slot is over " + invSize);
         }
     }
 
-    protected int convertXYtoIndex(int x, int y) {
+    default int convertXYtoIndex(int x, int y) {
         return y * 9 + x;
     }
 }

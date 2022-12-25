@@ -1,12 +1,9 @@
-package de.kripa.guitools.std;
+package de.kripa.guitools.std.gui;
 
-import de.kripa.guitools.GuiTools;
 import de.kripa.guitools.gui.GUI;
 import de.kripa.guitools.gui.GUIElement;
-import de.kripa.guitools.history.PlayerHistoryEntry;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import de.kripa.guitools.std.element.AirElement;
+import lombok.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,9 +12,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 
 
-public class SimpleGUI extends GUI {
-    @NonNull @Setter @Getter private String title;
-    @NonNull @Setter @Getter private GUIElement[] content;
+@Data
+public class SimpleGUI implements GUI {
+    @NonNull @Setter @Getter protected String title;
+    @NonNull @Setter @Getter protected GUIElement[] content;
+
+    @NonNull @Getter protected String meta = "";
 
     public SimpleGUI(@NonNull String title, int rows) {
         this(title, generateEmptyElementArray(rows * 9));
@@ -36,20 +36,10 @@ public class SimpleGUI extends GUI {
     }
 
     @Override
-    protected Inventory toInventory() {
-        Inventory inv = Bukkit.createInventory(null, this.content.length, this.title);
+    public Inventory render(Player p) {
+        Inventory inv = Bukkit.createInventory(null, this.content.length, this.title + this.meta);
         inv.setContents(Arrays.stream(this.content).map(GUIElement::getIcon).toArray(ItemStack[]::new));
         return inv;
-    }
-
-    /**
-     * Opens the GUI for a Player
-     * @param p The Player to open the GUI for
-     */
-    @Override
-    public void openGUI(@NonNull Player p) {
-        p.openInventory(this.toInventory());
-        GuiTools.historyManager.appendHistory(new PlayerHistoryEntry(p, this));
     }
 
     @Override
@@ -65,8 +55,13 @@ public class SimpleGUI extends GUI {
     private static GUIElement[] generateEmptyElementArray(int length) {
         GUIElement[] result = new GUIElement[length];
         for (int i = 0; i < length; i++) {
-            result[i] = new EmptyElement();
+            result[i] = new AirElement();
         }
         return result;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

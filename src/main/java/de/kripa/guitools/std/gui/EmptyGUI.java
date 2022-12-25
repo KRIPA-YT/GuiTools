@@ -1,6 +1,7 @@
-package de.kripa.guitools.std;
+package de.kripa.guitools.std.gui;
 
 import de.kripa.guitools.gui.GUIElement;
+import de.kripa.guitools.std.element.EmptyElement;
 import lombok.NonNull;
 
 public class EmptyGUI extends SimpleGUI {
@@ -11,7 +12,7 @@ public class EmptyGUI extends SimpleGUI {
     private static GUIElement[] generateFillerElementArray(int length) {
         GUIElement[] result = new GUIElement[length];
         for (int i = 0; i < length; i++) {
-            result[i] = new FillerElement();
+            result[i] = new EmptyElement();
         }
         return result;
     }

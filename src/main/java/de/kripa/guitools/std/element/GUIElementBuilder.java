@@ -1,5 +1,11 @@
-package de.kripa.guitools.std;
+package de.kripa.guitools.std.element;
 
+import de.kripa.guitools.gui.GUIElement;
+import de.kripa.guitools.gui.GUIElementClickEvent;
+import de.kripa.guitools.std.ItemBuilder;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -13,57 +19,69 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Easily create itemstacks, without messing your hands.
- * <i>Note that if you do use this in one of your projects, leave this notice.</i>
- * <i>Please do credit me if you do use this in one of your projects.</i>
- * @author NonameSL
- */
-public class ItemBuilder {
-    protected ItemStack is;
-    /**
-     * Create a new ItemBuilder from scratch.
-     * @param m The material to create the ItemBuilder with.
-     */
-    public ItemBuilder(Material m){
-        this(m, 1);
+public class GUIElementBuilder extends ItemBuilder {
+    public interface GUIElementClickHandler {
+        boolean onClick(GUIElementClickEvent event);
     }
+
+    @Setter @Getter
+    private GUIElementClickHandler guiElementClickHandler;
+
     /**
-     * Create a new ItemBuilder over an existing itemstack.
-     * @param is The itemstack to create the ItemBuilder over.
+     * Create a new GUIBuilder from scratch.
+     *
+     * @param m The material to create the GUIBuilder with.
      */
-    public ItemBuilder(ItemStack is){
-        this.is=is;
+    public GUIElementBuilder(Material m, @NonNull GUIElementClickHandler handler) {
+        super(m);
+        this.guiElementClickHandler = handler;
     }
+
     /**
-     * Create a new ItemBuilder from scratch.
-     * @param m The material of the item.
+     * Create a new GUIBuilder over an existing Itemstack.
+     *
+     * @param is The Itemstack to create the GUIBuilder over.
+     */
+    public GUIElementBuilder(ItemStack is, @NonNull GUIElementClickHandler handler) {
+        super(is);
+        this.guiElementClickHandler = handler;
+    }
+
+    /**
+     * Create a new GUIBuilder from scratch.
+     *
+     * @param m      The material of the item.
      * @param amount The amount of the item.
      */
-    public ItemBuilder(Material m, int amount){
-        is= new ItemStack(m, amount);
+    public GUIElementBuilder(Material m, int amount, @NonNull GUIElementClickHandler handler) {
+        super(m, amount);
+        this.guiElementClickHandler = handler;
     }
+
     /**
-     * Create a new ItemBuilder from scratch.
-     * @param m The material of the item.
-     * @param amount The amount of the item.
+     * Create a new GUIBuilder from scratch.
+     *
+     * @param m          The material of the item.
+     * @param amount     The amount of the item.
      * @param durability The durability of the item.
      */
-    public ItemBuilder(Material m, int amount, byte durability){
-        is = new ItemStack(m, amount, durability);
+    public GUIElementBuilder(Material m, int amount, byte durability, @NonNull GUIElementClickHandler handler) {
+        super(m, amount, durability);
+        this.guiElementClickHandler = handler;
     }
+
     /**
-     * Clone the ItemBuilder into a new one.
+     * Clone the GUIElementBuilder into a new one.
      * @return The cloned instance.
      */
-    public ItemBuilder clone(){
-        return new ItemBuilder(is);
+    public GUIElementBuilder clone(){
+        return new GUIElementBuilder(is, this.guiElementClickHandler);
     }
     /**
      * Change the durability of the item.
      * @param dur The durability to set it to.
      */
-    public ItemBuilder setDurability(short dur){
+    public GUIElementBuilder setDurability(short dur){
         is.setDurability(dur);
         return this;
     }
@@ -71,7 +89,7 @@ public class ItemBuilder {
      * Set the displayname of the item.
      * @param name The name to change it to.
      */
-    public ItemBuilder setName(String name){
+    public GUIElementBuilder setName(String name){
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(name);
         is.setItemMeta(im);
@@ -82,7 +100,7 @@ public class ItemBuilder {
      * @param ench The enchantment to add.
      * @param level The level to put the enchant on.
      */
-    public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level){
+    public GUIElementBuilder addUnsafeEnchantment(Enchantment ench, int level){
         is.addUnsafeEnchantment(ench, level);
         return this;
     }
@@ -90,7 +108,7 @@ public class ItemBuilder {
      * Remove a certain enchant from the item.
      * @param ench The enchantment to remove
      */
-    public ItemBuilder removeEnchantment(Enchantment ench){
+    public GUIElementBuilder removeEnchantment(Enchantment ench){
         is.removeEnchantment(ench);
         return this;
     }
@@ -98,7 +116,7 @@ public class ItemBuilder {
      * Set the skull owner for the item. Works on skulls only.
      * @param owner The name of the skull's owner.
      */
-    public ItemBuilder setSkullOwner(String owner){
+    public GUIElementBuilder setSkullOwner(String owner){
         try{
             SkullMeta im = (SkullMeta)is.getItemMeta();
             im.setOwner(owner);
@@ -111,7 +129,7 @@ public class ItemBuilder {
      * @param ench The enchant to add
      * @param level The level
      */
-    public ItemBuilder addEnchant(Enchantment ench, int level){
+    public GUIElementBuilder addEnchant(Enchantment ench, int level){
         ItemMeta im = is.getItemMeta();
         im.addEnchant(ench, level, true);
         is.setItemMeta(im);
@@ -121,14 +139,14 @@ public class ItemBuilder {
      * Add multiple enchants at once.
      * @param enchantments The enchants to add.
      */
-    public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments){
+    public GUIElementBuilder addEnchantments(Map<Enchantment, Integer> enchantments){
         is.addEnchantments(enchantments);
         return this;
     }
     /**
      * Sets infinity durability on the item by setting the durability to Short.MAX_VALUE.
      */
-    public ItemBuilder setInfinityDurability(){
+    public GUIElementBuilder setInfinityDurability(){
         is.setDurability(Short.MAX_VALUE);
         return this;
     }
@@ -136,7 +154,7 @@ public class ItemBuilder {
      * Re-sets the lore.
      * @param lore The lore to set it to.
      */
-    public ItemBuilder setLore(String... lore){
+    public GUIElementBuilder setLore(String... lore){
         ItemMeta im = is.getItemMeta();
         im.setLore(Arrays.asList(lore));
         is.setItemMeta(im);
@@ -146,7 +164,7 @@ public class ItemBuilder {
      * Re-sets the lore.
      * @param lore The lore to set it to.
      */
-    public ItemBuilder setLore(List<String> lore) {
+    public GUIElementBuilder setLore(List<String> lore) {
         ItemMeta im = is.getItemMeta();
         im.setLore(lore);
         is.setItemMeta(im);
@@ -156,7 +174,7 @@ public class ItemBuilder {
      * Remove a lore line.
      * @param line The lore to remove.
      */
-    public ItemBuilder removeLoreLine(String line){
+    public GUIElementBuilder removeLoreLine(String line){
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         if(!lore.contains(line))return this;
@@ -169,7 +187,7 @@ public class ItemBuilder {
      * Remove a lore line.
      * @param index The index of the lore line to remove.
      */
-    public ItemBuilder removeLoreLine(int index){
+    public GUIElementBuilder removeLoreLine(int index){
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         if(index<0||index>lore.size())return this;
@@ -182,7 +200,7 @@ public class ItemBuilder {
      * Add a lore line.
      * @param line The lore line to add.
      */
-    public ItemBuilder addLoreLine(String line){
+    public GUIElementBuilder addLoreLine(String line){
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>();
         if(im.hasLore())lore = new ArrayList<>(im.getLore());
@@ -196,7 +214,7 @@ public class ItemBuilder {
      * @param line The lore line to add.
      * @param pos The index of where to put it.
      */
-    public ItemBuilder addLoreLine(String line, int pos){
+    public GUIElementBuilder addLoreLine(String line, int pos){
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         lore.set(pos, line);
@@ -208,7 +226,7 @@ public class ItemBuilder {
      * Sets the armor color of a leather armor piece. Works only on leather armor pieces.
      * @param color The color to set it to.
      */
-    public ItemBuilder setLeatherArmorColor(Color color){
+    public GUIElementBuilder setLeatherArmorColor(Color color){
         try{
             LeatherArmorMeta im = (LeatherArmorMeta)is.getItemMeta();
             im.setColor(color);
@@ -217,10 +235,24 @@ public class ItemBuilder {
         return this;
     }
     /**
-     * Retrieves the itemstack from the ItemBuilder.
-     * @return The itemstack created/modified by the ItemBuilder instance.
+     * Retrieves the itemstack from the GUIElementBuilder.
+     * @return The itemstack created/modified by the GUIElementBuilder instance.
      */
     public ItemStack toItemStack(){
         return is;
+    }
+
+    public GUIElement toGUIElement() {
+        return new GUIElement() {
+            @Override
+            public boolean onClick(GUIElementClickEvent e) {
+                return guiElementClickHandler.onClick(e);
+            }
+
+            @Override
+            public ItemStack getIcon() {
+                return toItemStack();
+            }
+        };
     }
 }

@@ -12,7 +12,7 @@ public class PlayerHistory {
     @Getter(AccessLevel.PROTECTED) private List<PlayerHistoryEntry> history = new ArrayList<>();
 
     /**
-     * Copies another PlayerHistory object
+     * Copies another {@link PlayerHistory} object
      * @param playerHistory The object to copy
      */
     public PlayerHistory(PlayerHistory playerHistory) {
@@ -21,9 +21,9 @@ public class PlayerHistory {
     }
 
     /**
-     * Initializes a PlayerHistory object with a given player and optional PlayerHistoryEntries
-     * @param player The Player to assign the history to
-     * @param history Optional already existing PlayerHistoryEntries
+     * Initializes a {@link PlayerHistory} object with a given player and optional PlayerHistoryEntries
+     * @param player The {@link Player} to assign the history to
+     * @param history Optional already existing {@link PlayerHistoryEntry}s
      */
     public PlayerHistory(Player player, PlayerHistoryEntry... history) {
         this.player = player;
@@ -31,9 +31,9 @@ public class PlayerHistory {
     }
 
     /**
-     * Adds a single or multiple PlayerHistoryEntries
+     * Adds a single or multiple {@link PlayerHistoryEntry}s
      *
-     * @param playerHistoryEntries The PlayerHistoryEntries to add
+     * @param playerHistoryEntries The {@link PlayerHistoryEntry}s to add
      * @return this
      */
     public PlayerHistory addEntry(PlayerHistoryEntry... playerHistoryEntries) {
@@ -42,9 +42,9 @@ public class PlayerHistory {
     }
 
     /**
-     * Removes an Entry from History
+     * Removes a {@link PlayerHistoryEntry} from History
      * @param index The index to remove from; When it is negative it gets removed from the back
-     * @return The removed PlayerHistoryEntry
+     * @return The removed {@link PlayerHistoryEntry}
      */
     public PlayerHistoryEntry removeEntry(int index) {
         if (index < 0) {
@@ -54,9 +54,9 @@ public class PlayerHistory {
     }
 
     /**
-     * Gets an Entry from History
+     * Gets a {@link PlayerHistoryEntry} from History
      * @param index The index to get from; When it is negative it gets removed from the back
-     * @return The PlayerHistoryEntry at position index
+     * @return The {@link PlayerHistoryEntry} at position index
      */
     public PlayerHistoryEntry getEntry(int index) {
         if (index < 0) {
@@ -67,11 +67,19 @@ public class PlayerHistory {
 
     /**
      * Clears the entire history
-     * @return The entire deleted history
+     * @return The entire deleted history as a {@link PlayerHistoryEntry} list
      */
     public PlayerHistoryEntry[] clearHistory() {
         PlayerHistoryEntry[] deleted = history.toArray(PlayerHistoryEntry[]::new);
         history.clear();
         return deleted;
+    }
+
+    /**
+     * Gets the size of the {@link PlayerHistory}
+     * @return The size
+     */
+    public int size() {
+        return history.size();
     }
 }
