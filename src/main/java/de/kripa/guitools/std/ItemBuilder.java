@@ -77,6 +77,10 @@ public class ItemBuilder {
         is.setItemMeta(im);
         return this;
     }
+    public ItemBuilder setAmount(int amount) {
+        is.setAmount(amount);
+        return this;
+    }
     /**
      * Add an unsafe enchantment.
      * @param ench The enchantment to add.

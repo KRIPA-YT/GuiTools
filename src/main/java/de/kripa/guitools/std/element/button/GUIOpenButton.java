@@ -1,20 +1,24 @@
-package de.kripa.guitools.std.element;
+package de.kripa.guitools.std.element.button;
 
-import de.kripa.guitools.GuiManager;
+import de.kripa.guitools.gui.GUI;
 import de.kripa.guitools.gui.GUIElementClickEvent;
-import de.kripa.guitools.std.element.button.GUIButton;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 
 @AllArgsConstructor
-public class BackElement implements GUIButton {
-    @Getter private ItemStack icon;
+public class GUIOpenButton implements GUIButton {
+    @Setter
+    @Getter
+    private GUI toOpen;
+    @Getter
+    private ItemStack icon;
 
     @Override
     public boolean onClick(GUIElementClickEvent e) {
         this.playDing(e.getPlayer());
-        GuiManager.historyManager.removePlayerHistoryEntry(e.getPlayer(), -1);
+        toOpen.scheduleOpenGUI(e.getPlayer());
         return false;
     }
 }

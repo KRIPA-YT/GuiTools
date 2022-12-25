@@ -3,7 +3,10 @@ package de.kripa.guitools.std.gui;
 import de.kripa.guitools.gui.GUI;
 import de.kripa.guitools.gui.GUIElement;
 import de.kripa.guitools.std.element.AirElement;
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -60,8 +63,11 @@ public class SimpleGUI implements GUI {
         return result;
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public GUI clone() {
+        try {
+            return (GUI) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 }

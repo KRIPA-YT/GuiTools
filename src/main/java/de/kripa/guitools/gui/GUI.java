@@ -1,6 +1,6 @@
 package de.kripa.guitools.gui;
 
-import de.kripa.guitools.GuiTools;
+import de.kripa.guitools.GuiManager;
 import de.kripa.guitools.history.PlayerHistoryEntry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -8,12 +8,23 @@ import org.bukkit.inventory.Inventory;
 public interface GUI extends Cloneable {
 
     /**
+     * <strong>Do not use this! Use {@link #scheduleOpenGUI(Player)} instead.<br/>
+     * For internal use only. </strong>
+     * <br/>
      * Opens the GUI for a Player
      * @param p The Player to open the GUI for
      */
+    @Deprecated
     default void openGUI(Player p) {
-        GuiTools.historyManager.appendHistory(new PlayerHistoryEntry(p, this));
+        GuiManager.historyManager.appendHistory(new PlayerHistoryEntry(p, this));
         p.openInventory(render(p));
+    }
+
+    default void scheduleOpenGUI(Player p) {
+        GuiManager.historyManager.setPreserveHistory(p, true);
+        this.update();
+        this.openGUI(p);
+        GuiManager.historyManager.setPreserveHistory(p, false);
     }
 
     Object clone() throws CloneNotSupportedException;

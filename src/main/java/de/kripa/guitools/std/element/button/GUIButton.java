@@ -1,4 +1,4 @@
-package de.kripa.guitools.std.element;
+package de.kripa.guitools.std.element.button;
 
 import de.kripa.guitools.gui.GUIElement;
 import org.bukkit.Sound;

@@ -1,8 +1,12 @@
 package de.kripa.guitools.guicreator.itemselect;
 
-import de.kripa.guitools.GuiTools;
+import de.kripa.guitools.GuiManager;
+import de.kripa.guitools.guicreator.amountselect.AmountSelectGUI;
 import de.kripa.guitools.std.ItemBuilder;
 import de.kripa.guitools.std.element.*;
+import de.kripa.guitools.std.element.button.GUIOpenButton;
+import de.kripa.guitools.std.element.button.RotatingSelectButton;
+import de.kripa.guitools.std.element.button.SignInputButton;
 import de.kripa.guitools.std.gui.EmptyGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -70,7 +74,7 @@ public class ItemSelectGUI extends EmptyGUI implements CommandExecutor {
     public Inventory render(Player p) {
 
         // Search and back arrow
-        if (GuiTools.historyManager.hasHistory(p)) {
+        if (GuiManager.historyManager.hasHistory(p)) {
             this.setGUIElement(this.search, 3, 5);
             this.setGUIElement(new BackElement(new ItemBuilder(Material.ARROW).setName("§aBack").toItemStack()), 4, 5);
         } else {
@@ -84,7 +88,7 @@ public class ItemSelectGUI extends EmptyGUI implements CommandExecutor {
         for (int x = 0; x < 7; x++) {
             for (int y = 0; y < 4; y++) {
                 if (y * 7 + x < items.length) {
-                    this.setGUIElement(new ItemButton(new ItemStack(items[y * 7 + x])), x + 1, y + 1);
+                    this.setGUIElement(new GUIOpenButton(new AmountSelectGUI(new ItemStack(items[y * 7 + x])), new ItemStack(items[y * 7 + x])), x + 1, y + 1);
                 } else {
                     this.setGUIElement(new AirElement(), x + 1, y + 1);
                 }
@@ -105,6 +109,18 @@ public class ItemSelectGUI extends EmptyGUI implements CommandExecutor {
         }
 
         return super.render(p);
+    }
+
+    public int getPage() {
+        return this.lastPage;
+    }
+
+    public String getSearch() {
+        return this.search.getResult();
+    }
+
+    public int getSort() {
+        return this.sortSelect.getSelectedOption();
     }
 
     private Material[] fetchItems(int page, String sortString, int sort) {
@@ -144,9 +160,7 @@ public class ItemSelectGUI extends EmptyGUI implements CommandExecutor {
         }
 
         Player p = (Player) sender;
-        this.prevPageButton.setPage(args.length <= 0 ? 0 : Integer.parseInt(args[0]));
-        this.update();
-        this.openGUI(p);
+        new ItemSelectGUI(this.getPage(), this.getSearch(), this.getSort()).scheduleOpenGUI(p);
         return true;
     }
 }

@@ -1,9 +1,11 @@
-package de.kripa.guitools.std.element;
+package de.kripa.guitools.std.element.button;
 
+import de.kripa.guitools.GuiManager;
 import de.kripa.guitools.GuiTools;
 import de.kripa.guitools.gui.GUIElementClickEvent;
 import de.kripa.guitools.signgui.SignGUI;
 import de.kripa.guitools.std.ItemBuilder;
+import de.kripa.guitools.std.element.button.GUIButton;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -15,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SignInputButton implements GUIButton {
-    private ItemStack icon;
+    protected ItemStack icon;
     @Getter private String[] lines;
     @Getter private String result = "";
     @Setter @Getter private boolean removeHistory;
@@ -48,20 +50,20 @@ public class SignInputButton implements GUIButton {
             return false;
         }
 
-        SignGUI signGUI = new SignGUI(GuiTools.signManager, event -> {
+        SignGUI signGUI = new SignGUI(GuiManager.signManager, event -> {
             result = event.getLines()[0];
             Bukkit.getScheduler().runTask(GuiTools.plugin, () -> {
-                GuiTools.historyManager.getLastHistoryEntry(p).getGui().update();
+                GuiManager.historyManager.getLastHistoryEntry(p).getGui().update();
                 if (removeHistory) {
-                    p.openInventory(GuiTools.historyManager.getLastHistoryEntry(p).getGui().render(p));
+                    p.openInventory(GuiManager.historyManager.getLastHistoryEntry(p).getGui().render(p));
                 } else {
-                    GuiTools.historyManager.getLastHistoryEntry(p).getGui().openGUI(p);
+                    GuiManager.historyManager.getLastHistoryEntry(p).getGui().openGUI(p);
                 }
-                GuiTools.historyManager.setPreserveHistory(p, false);
+                GuiManager.historyManager.setPreserveHistory(p, false);
             });
         });
         signGUI.withLines(this.lines);
-        GuiTools.historyManager.setPreserveHistory(p, true);
+        GuiManager.historyManager.setPreserveHistory(p, true);
         signGUI.open(e.getPlayer());
         return false;
     }

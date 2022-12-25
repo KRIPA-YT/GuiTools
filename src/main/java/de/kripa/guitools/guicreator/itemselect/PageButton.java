@@ -2,7 +2,7 @@ package de.kripa.guitools.guicreator.itemselect;
 
 import de.kripa.guitools.gui.GUIElementClickEvent;
 import de.kripa.guitools.std.ItemBuilder;
-import de.kripa.guitools.std.element.GUIButton;
+import de.kripa.guitools.std.element.button.GUIButton;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
