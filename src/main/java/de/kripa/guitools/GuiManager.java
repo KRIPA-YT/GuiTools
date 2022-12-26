@@ -2,6 +2,7 @@ package de.kripa.guitools;
 
 import de.kripa.guitools.gui.GUI;
 import de.kripa.guitools.gui.GUIElementClickEvent;
+import de.kripa.guitools.guicreator.itemedit.NameEditButton;
 import de.kripa.guitools.history.HistoryManager;
 import de.kripa.guitools.signgui.SignManager;
 import org.bukkit.Bukkit;
@@ -12,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.PluginManager;
 
@@ -28,9 +30,11 @@ public class GuiManager implements Listener {
         signManager = new SignManager(GuiTools.plugin);
         signManager.init(pm);
         pm.registerEvents(this, GuiTools.plugin);
+        pm.registerEvents(new NameEditButton(), GuiTools.plugin);
     }
 
     @EventHandler
+    @SuppressWarnings("deprecation")
     public void onInvClick(InventoryClickEvent e) throws CloneNotSupportedException {
         Player p = (Player) e.getWhoClicked();
 
@@ -41,6 +45,10 @@ public class GuiManager implements Listener {
 
         if (!historyManager.hasCurrentGUI(p)) {
             //p.sendMessage(PREFIX + "Doesn't have currentGUI");
+            return;
+        }
+
+        if (e.getView().getTopInventory().getType() != InventoryType.CHEST) {
             return;
         }
 

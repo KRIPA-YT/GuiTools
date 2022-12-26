@@ -3,6 +3,7 @@ package de.kripa.guitools.std;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -77,8 +78,24 @@ public class ItemBuilder {
         is.setItemMeta(im);
         return this;
     }
+
+    /**
+     * Set the amount of the item
+     * @param amount The amount to set it to.
+     */
     public ItemBuilder setAmount(int amount) {
         is.setAmount(amount);
+        return this;
+    }
+
+    /**
+     * Set itemflags of the item.
+     * @param itemFlags The itemflags to set.
+     */
+    public ItemBuilder setItemFlags(ItemFlag... itemFlags) {
+        ItemMeta im = is.getItemMeta();
+        im.addItemFlags(itemFlags);
+        is.setItemMeta(im);
         return this;
     }
     /**

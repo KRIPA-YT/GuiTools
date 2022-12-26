@@ -1,5 +1,6 @@
 package de.kripa.guitools;
 
+import de.kripa.guitools.anvilgui.AnvilGUI;
 import de.kripa.guitools.guicreator.itemselect.ItemSelectGUI;
 import de.kripa.guitools.history.PlayerHistoryEntry;
 import de.kripa.guitools.std.gui.EmptyGUI;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class GuiTools extends JavaPlugin implements Listener {
@@ -39,10 +41,44 @@ public final class GuiTools extends JavaPlugin implements Listener {
             return true;
         }
 
+        if (args.length < 1) {
+            appendHistory(p, args);
+            return true;
+        }
+        String subCmd = args[0];
+        System.arraycopy(args, 1, args, 0, args.length - 1);
+        switch (subCmd) {
+            case "history":
+                appendHistory(p, args);
+                break;
+            case "anviltest":
+                anvilTest(p, args);
+                break;
+            default:
+                p.sendMessage(PREFIX + "No such subcommand exists.");
+        }
+        return true;
+    }
+
+    private void appendHistory(Player p, String[] args) {
         EmptyGUI emptyGUI = new EmptyGUI("Empty GUI", 6);
         GuiManager.historyManager.appendHistory(new PlayerHistoryEntry(p, emptyGUI));
         p.sendMessage(PREFIX + "History appended");
         p.sendMessage(PREFIX + "hasCurrentGUI(" + p.getName() + ") = " + GuiManager.historyManager.hasCurrentGUI(p));
-        return true;
+    }
+
+    private void anvilTest(Player p, String[] args) {
+        AnvilGUI.Builder anvilGUIBuilder = new AnvilGUI.Builder();
+        anvilGUIBuilder.onComplete((completion) -> {
+            if(completion.getText().equalsIgnoreCase("you")) {
+                completion.getPlayer().sendMessage("You have magical powers!");
+                return List.of(AnvilGUI.ResponseAction.close());
+            } else {
+                return List.of(AnvilGUI.ResponseAction.replaceInputText("Try again"));
+            }
+        });
+        anvilGUIBuilder.text("What is the meaning of life?");
+        anvilGUIBuilder.plugin(this);
+        anvilGUIBuilder.open(p);
     }
 }

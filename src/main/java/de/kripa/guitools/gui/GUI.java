@@ -27,7 +27,7 @@ public interface GUI extends Cloneable {
         GuiManager.historyManager.setPreserveHistory(p, false);
     }
 
-    Object clone() throws CloneNotSupportedException;
+    Object clone();
 
     /**
      * Converts this object to an org.bukkit.inventory.Inventory

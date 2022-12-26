@@ -1,6 +1,7 @@
 package de.kripa.guitools.guicreator.itemselect;
 
 import de.kripa.guitools.GuiManager;
+import de.kripa.guitools.guicreator.ArrowBackElement;
 import de.kripa.guitools.guicreator.amountselect.AmountSelectGUI;
 import de.kripa.guitools.std.ItemBuilder;
 import de.kripa.guitools.std.element.*;
@@ -76,7 +77,7 @@ public class ItemSelectGUI extends EmptyGUI implements CommandExecutor {
         // Search and back arrow
         if (GuiManager.historyManager.hasHistory(p)) {
             this.setGUIElement(this.search, 3, 5);
-            this.setGUIElement(new BackElement(new ItemBuilder(Material.ARROW).setName("§aBack").toItemStack()), 4, 5);
+            this.setGUIElement(new ArrowBackElement(p), 4, 5);
         } else {
             this.setGUIElement(new EmptyElement(), 3, 5);
             this.setGUIElement(this.search, 4, 5);

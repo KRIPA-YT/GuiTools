@@ -5,7 +5,6 @@ import de.kripa.guitools.GuiTools;
 import de.kripa.guitools.gui.GUIElementClickEvent;
 import de.kripa.guitools.signgui.SignGUI;
 import de.kripa.guitools.std.ItemBuilder;
-import de.kripa.guitools.std.element.button.GUIButton;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -18,8 +17,8 @@ import java.util.List;
 
 public class SignInputButton implements GUIButton {
     protected ItemStack icon;
-    @Getter private String[] lines;
-    @Getter private String result = "";
+    @Getter private final String[] lines;
+    @Getter private String result;
     @Setter @Getter private boolean removeHistory;
 
     public SignInputButton(ItemStack icon, String... lines) {
@@ -42,6 +41,7 @@ public class SignInputButton implements GUIButton {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onClick(GUIElementClickEvent e) {
         Player p = e.getPlayer();
         this.playDing(p);
