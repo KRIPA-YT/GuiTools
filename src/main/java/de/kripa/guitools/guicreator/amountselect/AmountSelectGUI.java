@@ -54,7 +54,7 @@ public class AmountSelectGUI extends EmptyGUI {
         }
 
         // Edit item
-        this.setGUIElement(new GUIOpenButton(new ItemEditGUI(this.toModify), new ItemBuilder(Material.ANVIL).setName("§aEdit item:").addLoreLine("").addLoreLine("§eClick to edit").toItemStack()), 4, 2);
+        this.setGUIElement(new GUIOpenButton(new ItemEditGUI(this.toModify.clone()), new ItemBuilder(Material.ANVIL).setName("§aEdit item:").addLoreLine("").addLoreLine("§eClick to edit").toItemStack()), 4, 2);
 
         // Custom amount
         this.setGUIElement(this.amountSelectInput, 5, 2);

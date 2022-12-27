@@ -10,6 +10,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -101,7 +102,14 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param level The level to put the enchant on.
      */
     public GUIElementBuilder addUnsafeEnchantment(Enchantment ench, int level){
-        is.addUnsafeEnchantment(ench, level);
+        if (is.getType() != Material.ENCHANTED_BOOK) {
+            is.addUnsafeEnchantment(ench, level);
+            return this;
+        }
+
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        im.addStoredEnchant(ench, level, true);
+        is.setItemMeta(im);
         return this;
     }
     /**
@@ -109,7 +117,12 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param ench The enchantment to remove
      */
     public GUIElementBuilder removeEnchantment(Enchantment ench){
-        is.removeEnchantment(ench);
+        if (is.getType() != Material.ENCHANTED_BOOK) {
+            is.removeEnchantment(ench);
+            return this;
+        }
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        im.removeStoredEnchant(ench);
         return this;
     }
     /**
@@ -130,8 +143,15 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param level The level
      */
     public GUIElementBuilder addEnchant(Enchantment ench, int level){
-        ItemMeta im = is.getItemMeta();
-        im.addEnchant(ench, level, true);
+        if (is.getType() != Material.ENCHANTED_BOOK) {
+            ItemMeta im = is.getItemMeta();
+            im.addEnchant(ench, level, true);
+            is.setItemMeta(im);
+            return this;
+        }
+
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        im.addStoredEnchant(ench, level, true);
         is.setItemMeta(im);
         return this;
     }

@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -104,7 +105,14 @@ public class ItemBuilder {
      * @param level The level to put the enchant on.
      */
     public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level){
-        is.addUnsafeEnchantment(ench, level);
+        if (is.getType() != Material.ENCHANTED_BOOK) {
+            is.addUnsafeEnchantment(ench, level);
+            return this;
+        }
+
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        im.addStoredEnchant(ench, level, true);
+        is.setItemMeta(im);
         return this;
     }
     /**
@@ -112,8 +120,27 @@ public class ItemBuilder {
      * @param ench The enchantment to remove
      */
     public ItemBuilder removeEnchantment(Enchantment ench){
-        is.removeEnchantment(ench);
+        if (is.getType() != Material.ENCHANTED_BOOK) {
+            is.removeEnchantment(ench);
+            return this;
+        }
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        im.removeStoredEnchant(ench);
+        is.setItemMeta(im);
         return this;
+    }
+
+    /**
+     * Check if a certain enchant exists on the item.
+     * @param ench The enchantment to check
+     * @return If it exists
+     */
+    public boolean containsEnchantment(Enchantment ench) {
+        if (is.getType() != Material.ENCHANTED_BOOK) {
+            return is.containsEnchantment(ench);
+        }
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        return im.hasStoredEnchant(ench);
     }
     /**
      * Set the skull owner for the item. Works on skulls only.
@@ -133,8 +160,15 @@ public class ItemBuilder {
      * @param level The level
      */
     public ItemBuilder addEnchant(Enchantment ench, int level){
-        ItemMeta im = is.getItemMeta();
-        im.addEnchant(ench, level, true);
+        if (is.getType() != Material.ENCHANTED_BOOK) {
+            ItemMeta im = is.getItemMeta();
+            im.addEnchant(ench, level, true);
+            is.setItemMeta(im);
+            return this;
+        }
+
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        im.addStoredEnchant(ench, level, true);
         is.setItemMeta(im);
         return this;
     }

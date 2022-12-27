@@ -9,8 +9,8 @@ import org.bukkit.event.inventory.InventoryAction;
 @Data
 @AllArgsConstructor
 public class GUIElementClickEvent {
-    @Getter
-    private Player player;
+    @Getter private Player player;
     @Getter private boolean leftClick;
+    @Getter private boolean shiftClick;
     @Getter private InventoryAction action;
 }

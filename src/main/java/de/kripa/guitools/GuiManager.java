@@ -35,7 +35,7 @@ public class GuiManager implements Listener {
 
     @EventHandler
     @SuppressWarnings("deprecation")
-    public void onInvClick(InventoryClickEvent e) throws CloneNotSupportedException {
+    public void onInvClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
 
         int slotClicked = e.getSlot();
@@ -58,18 +58,22 @@ public class GuiManager implements Listener {
             return;
         }
 
-        GUI currentGUI = (GUI) historyManager.getLastHistoryEntry(p).getGui().clone();
+        GUI currentGUI = historyManager.getLastHistoryEntry(p).getGui();
         if (!e.getView().getTitle().equals(currentGUI.getTitle() + currentGUI.getMeta())) {
             //p.sendMessage(PREFIX + "Titles don't match");
             return;
         }
-
-        boolean cancelled = !currentGUI.getGUIElement(slotClicked).onClick(new GUIElementClickEvent(p, e.isLeftClick(), e.getAction()));
-        e.setCancelled(cancelled);
-        if (cancelled) {
-            e.setCurrentItem(null);
+        try {
+            boolean cancelled = !currentGUI.getGUIElement(slotClicked).onClick(new GUIElementClickEvent(p, e.isLeftClick(), e.isShiftClick(), e.getAction()));
+            e.setCancelled(cancelled);
+            if (cancelled) {
+                e.setCurrentItem(null);
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            e.setCancelled(true);
         }
-        currentGUI = (GUI) historyManager.getLastHistoryEntry(p).getGui().clone();
+        currentGUI = historyManager.getLastHistoryEntry(p).getGui();
         currentGUI.update();
 
         boolean invTitleChanged = !(e.getView().getTitle().equals(currentGUI.getTitle() + currentGUI.getMeta()));

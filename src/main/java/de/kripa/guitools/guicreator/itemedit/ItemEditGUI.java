@@ -26,12 +26,12 @@ public class ItemEditGUI extends EmptyGUI {
     public Inventory render(Player p) {
         this.setGUIElement(new GUIOpenButton(new AmountSelectGUI(this.toEdit), this.toEdit), 4, 0);
 
-        this.setGUIElement(new GUIOpenButton(new EnchantmentSelectGUI(this.toEdit), new ItemBuilder(Material.ENCHANTED_BOOK)
+        this.setGUIElement(new GUIOpenButton(new EnchantmentSelectGUI(this.toEdit.clone()), new ItemBuilder(Material.ENCHANTED_BOOK)
                 .setName("§aEdit Enchantments").addLoreLine("").addLoreLine("§eClick to edit").toItemStack()), 1, 1);
-        this.setGUIElement(new NameEditButton(this.toEdit), 3, 1);
-        this.setGUIElement(new GUIOpenButton(new LoreEditGUI(this.toEdit), new ItemBuilder(Material.OAK_SIGN)
+        this.setGUIElement(new NameEditButton(this.toEdit.clone()), 3, 1);
+        this.setGUIElement(new GUIOpenButton(new LoreEditGUI(this.toEdit.clone()), new ItemBuilder(Material.OAK_SIGN)
                 .setName("§aEdit Lore").addLoreLine("").addLoreLine("§eClick to edit").toItemStack()), 5, 1);
-        this.setGUIElement(new GUIOpenButton(new DurabilityEditGUI(this.toEdit), new ItemBuilder(Material.DIAMOND_SWORD)
+        this.setGUIElement(new GUIOpenButton(new DurabilityEditGUI(this.toEdit.clone()), new ItemBuilder(Material.DIAMOND_SWORD)
                 .setName("§aEdit Durability").addLoreLine("").addLoreLine("§eClick to edit").setDurability((short) 1)
                 .setItemFlags(ItemFlag.HIDE_ATTRIBUTES).toItemStack()), 7, 1);
 
