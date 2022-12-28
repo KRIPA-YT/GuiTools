@@ -209,6 +209,7 @@ public class EnchantmentSelectGUI extends EmptyGUI {
                         toEditBuilder.removeEnchantment(enchant);
                     }
                     toEditBuilder.addEnchant(enchant, Integer.parseInt(this.getResult()));
+                    this.playDing(p);
                 } else {
                     p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 0.1F);
                     p.sendMessage(PREFIX + "Please enter a valid integer between 1 and 255!");
@@ -357,10 +358,12 @@ public class EnchantmentSelectGUI extends EmptyGUI {
         // Sync row
         this.row = Math.min(this.row, maxRow());
 
+        // Set background color
+        Arrays.stream(this.getContent()).filter(content -> (content instanceof EmptyElement)).forEach(emptyElement ->
+            ((EmptyElement) emptyElement).setColor(displayModeColorMappings.get(this.currentDisplayMode))
+        );
+
         // Navigation buttons
-        Arrays.stream(this.getContent()).filter(content -> (content instanceof EmptyElement)).forEach(emptyElement -> {
-            ((EmptyElement) emptyElement).setColor(displayModeColorMappings.get(this.currentDisplayMode));
-        });
         this.setGUIElement(new ModeButton("§7Compatible", Material.NETHER_STAR, DisplayMode.COMPATIBLE), 0, 0);
         this.setGUIElement(new ModeButton("§cWeapons", Material.DIAMOND_SWORD, DisplayMode.WEAPON), 0, 1);
         this.setGUIElement(new ModeButton("§9Tools", Material.DIAMOND_PICKAXE, DisplayMode.TOOL), 0, 2);
@@ -485,6 +488,5 @@ public class EnchantmentSelectGUI extends EmptyGUI {
         }
         toEditBuilder.addUnsafeEnchantment(enchantment, level);
         toEdit = toEditBuilder.toItemStack();
-        return;
     }
 }

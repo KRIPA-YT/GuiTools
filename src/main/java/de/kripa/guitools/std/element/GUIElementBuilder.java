@@ -1,8 +1,8 @@
 package de.kripa.guitools.std.element;
 
-import de.kripa.guitools.gui.GUIElement;
 import de.kripa.guitools.gui.GUIElementClickEvent;
 import de.kripa.guitools.std.ItemBuilder;
+import de.kripa.guitools.std.element.button.GUIButton;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class GUIElementBuilder extends ItemBuilder {
+public class GUIElementBuilder extends ItemBuilder implements GUIButton {
     public interface GUIElementClickHandler {
-        boolean onClick(GUIElementClickEvent event);
+        boolean onClick(GUIElementClickEvent event, GUIElementBuilder elementBuilder);
     }
 
     @Setter @Getter
@@ -76,14 +76,14 @@ public class GUIElementBuilder extends ItemBuilder {
      * @return The cloned instance.
      */
     public GUIElementBuilder clone(){
-        return new GUIElementBuilder(is, this.guiElementClickHandler);
+        return new GUIElementBuilder(itemStack, this.guiElementClickHandler);
     }
     /**
      * Change the durability of the item.
      * @param dur The durability to set it to.
      */
     public GUIElementBuilder setDurability(short dur){
-        is.setDurability(dur);
+        itemStack.setDurability(dur);
         return this;
     }
     /**
@@ -91,9 +91,9 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param name The name to change it to.
      */
     public GUIElementBuilder setName(String name){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         im.setDisplayName(name);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -102,14 +102,14 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param level The level to put the enchant on.
      */
     public GUIElementBuilder addUnsafeEnchantment(Enchantment ench, int level){
-        if (is.getType() != Material.ENCHANTED_BOOK) {
-            is.addUnsafeEnchantment(ench, level);
+        if (itemStack.getType() != Material.ENCHANTED_BOOK) {
+            itemStack.addUnsafeEnchantment(ench, level);
             return this;
         }
 
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) itemStack.getItemMeta();
         im.addStoredEnchant(ench, level, true);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -117,11 +117,11 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param ench The enchantment to remove
      */
     public GUIElementBuilder removeEnchantment(Enchantment ench){
-        if (is.getType() != Material.ENCHANTED_BOOK) {
-            is.removeEnchantment(ench);
+        if (itemStack.getType() != Material.ENCHANTED_BOOK) {
+            itemStack.removeEnchantment(ench);
             return this;
         }
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) itemStack.getItemMeta();
         im.removeStoredEnchant(ench);
         return this;
     }
@@ -131,9 +131,9 @@ public class GUIElementBuilder extends ItemBuilder {
      */
     public GUIElementBuilder setSkullOwner(String owner){
         try{
-            SkullMeta im = (SkullMeta)is.getItemMeta();
+            SkullMeta im = (SkullMeta) itemStack.getItemMeta();
             im.setOwner(owner);
-            is.setItemMeta(im);
+            itemStack.setItemMeta(im);
         }catch(ClassCastException expected){}
         return this;
     }
@@ -143,16 +143,16 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param level The level
      */
     public GUIElementBuilder addEnchant(Enchantment ench, int level){
-        if (is.getType() != Material.ENCHANTED_BOOK) {
-            ItemMeta im = is.getItemMeta();
+        if (itemStack.getType() != Material.ENCHANTED_BOOK) {
+            ItemMeta im = itemStack.getItemMeta();
             im.addEnchant(ench, level, true);
-            is.setItemMeta(im);
+            itemStack.setItemMeta(im);
             return this;
         }
 
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) itemStack.getItemMeta();
         im.addStoredEnchant(ench, level, true);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -160,14 +160,14 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param enchantments The enchants to add.
      */
     public GUIElementBuilder addEnchantments(Map<Enchantment, Integer> enchantments){
-        is.addEnchantments(enchantments);
+        itemStack.addEnchantments(enchantments);
         return this;
     }
     /**
      * Sets infinity durability on the item by setting the durability to Short.MAX_VALUE.
      */
     public GUIElementBuilder setInfinityDurability(){
-        is.setDurability(Short.MAX_VALUE);
+        itemStack.setDurability(Short.MAX_VALUE);
         return this;
     }
     /**
@@ -175,9 +175,9 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param lore The lore to set it to.
      */
     public GUIElementBuilder setLore(String... lore){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         im.setLore(Arrays.asList(lore));
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -185,9 +185,9 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param lore The lore to set it to.
      */
     public GUIElementBuilder setLore(List<String> lore) {
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -195,12 +195,12 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param line The lore to remove.
      */
     public GUIElementBuilder removeLoreLine(String line){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         if(!lore.contains(line))return this;
         lore.remove(line);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -208,12 +208,12 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param index The index of the lore line to remove.
      */
     public GUIElementBuilder removeLoreLine(int index){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         if(index<0||index>lore.size())return this;
         lore.remove(index);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -221,12 +221,12 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param line The lore line to add.
      */
     public GUIElementBuilder addLoreLine(String line){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>();
         if(im.hasLore())lore = new ArrayList<>(im.getLore());
         lore.add(line);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -235,11 +235,11 @@ public class GUIElementBuilder extends ItemBuilder {
      * @param pos The index of where to put it.
      */
     public GUIElementBuilder addLoreLine(String line, int pos){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         lore.set(pos, line);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -248,9 +248,9 @@ public class GUIElementBuilder extends ItemBuilder {
      */
     public GUIElementBuilder setLeatherArmorColor(Color color){
         try{
-            LeatherArmorMeta im = (LeatherArmorMeta)is.getItemMeta();
+            LeatherArmorMeta im = (LeatherArmorMeta) itemStack.getItemMeta();
             im.setColor(color);
-            is.setItemMeta(im);
+            itemStack.setItemMeta(im);
         }catch(ClassCastException expected){}
         return this;
     }
@@ -259,20 +259,16 @@ public class GUIElementBuilder extends ItemBuilder {
      * @return The itemstack created/modified by the GUIElementBuilder instance.
      */
     public ItemStack toItemStack(){
-        return is;
+        return itemStack;
     }
 
-    public GUIElement toGUIElement() {
-        return new GUIElement() {
-            @Override
-            public boolean onClick(GUIElementClickEvent e) {
-                return guiElementClickHandler.onClick(e);
-            }
+    @Override
+    public boolean onClick(GUIElementClickEvent e) {
+        return this.guiElementClickHandler.onClick(e, this);
+    }
 
-            @Override
-            public ItemStack getIcon() {
-                return toItemStack();
-            }
-        };
+    @Override
+    public ItemStack getIcon() {
+        return this.toItemStack();
     }
 }

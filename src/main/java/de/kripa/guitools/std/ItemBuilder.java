@@ -1,5 +1,7 @@
 package de.kripa.guitools.std;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -22,7 +24,8 @@ import java.util.Map;
  * @author NonameSL
  */
 public class ItemBuilder {
-    protected ItemStack is;
+    @Setter @Getter
+    protected ItemStack itemStack;
     /**
      * Create a new ItemBuilder from scratch.
      * @param m The material to create the ItemBuilder with.
@@ -32,10 +35,10 @@ public class ItemBuilder {
     }
     /**
      * Create a new ItemBuilder over an existing itemstack.
-     * @param is The itemstack to create the ItemBuilder over.
+     * @param itemStack The itemstack to create the ItemBuilder over.
      */
-    public ItemBuilder(ItemStack is){
-        this.is=is;
+    public ItemBuilder(ItemStack itemStack){
+        this.itemStack =itemStack;
     }
     /**
      * Create a new ItemBuilder from scratch.
@@ -43,7 +46,7 @@ public class ItemBuilder {
      * @param amount The amount of the item.
      */
     public ItemBuilder(Material m, int amount){
-        is= new ItemStack(m, amount);
+        itemStack = new ItemStack(m, amount);
     }
     /**
      * Create a new ItemBuilder from scratch.
@@ -52,21 +55,21 @@ public class ItemBuilder {
      * @param durability The durability of the item.
      */
     public ItemBuilder(Material m, int amount, byte durability){
-        is = new ItemStack(m, amount, durability);
+        itemStack = new ItemStack(m, amount, durability);
     }
     /**
      * Clone the ItemBuilder into a new one.
      * @return The cloned instance.
      */
     public ItemBuilder clone(){
-        return new ItemBuilder(is);
+        return new ItemBuilder(itemStack);
     }
     /**
      * Change the durability of the item.
      * @param dur The durability to set it to.
      */
     public ItemBuilder setDurability(short dur){
-        is.setDurability(dur);
+        itemStack.setDurability(dur);
         return this;
     }
     /**
@@ -74,9 +77,9 @@ public class ItemBuilder {
      * @param name The name to change it to.
      */
     public ItemBuilder setName(String name){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         im.setDisplayName(name);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
 
@@ -85,7 +88,7 @@ public class ItemBuilder {
      * @param amount The amount to set it to.
      */
     public ItemBuilder setAmount(int amount) {
-        is.setAmount(amount);
+        itemStack.setAmount(amount);
         return this;
     }
 
@@ -94,9 +97,9 @@ public class ItemBuilder {
      * @param itemFlags The itemflags to set.
      */
     public ItemBuilder setItemFlags(ItemFlag... itemFlags) {
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         im.addItemFlags(itemFlags);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -105,14 +108,14 @@ public class ItemBuilder {
      * @param level The level to put the enchant on.
      */
     public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level){
-        if (is.getType() != Material.ENCHANTED_BOOK) {
-            is.addUnsafeEnchantment(ench, level);
+        if (itemStack.getType() != Material.ENCHANTED_BOOK) {
+            itemStack.addUnsafeEnchantment(ench, level);
             return this;
         }
 
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) itemStack.getItemMeta();
         im.addStoredEnchant(ench, level, true);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -120,13 +123,13 @@ public class ItemBuilder {
      * @param ench The enchantment to remove
      */
     public ItemBuilder removeEnchantment(Enchantment ench){
-        if (is.getType() != Material.ENCHANTED_BOOK) {
-            is.removeEnchantment(ench);
+        if (itemStack.getType() != Material.ENCHANTED_BOOK) {
+            itemStack.removeEnchantment(ench);
             return this;
         }
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) itemStack.getItemMeta();
         im.removeStoredEnchant(ench);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
 
@@ -136,10 +139,10 @@ public class ItemBuilder {
      * @return If it exists
      */
     public boolean containsEnchantment(Enchantment ench) {
-        if (is.getType() != Material.ENCHANTED_BOOK) {
-            return is.containsEnchantment(ench);
+        if (itemStack.getType() != Material.ENCHANTED_BOOK) {
+            return itemStack.containsEnchantment(ench);
         }
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) itemStack.getItemMeta();
         return im.hasStoredEnchant(ench);
     }
     /**
@@ -148,9 +151,9 @@ public class ItemBuilder {
      */
     public ItemBuilder setSkullOwner(String owner){
         try{
-            SkullMeta im = (SkullMeta)is.getItemMeta();
+            SkullMeta im = (SkullMeta) itemStack.getItemMeta();
             im.setOwner(owner);
-            is.setItemMeta(im);
+            itemStack.setItemMeta(im);
         }catch(ClassCastException expected){}
         return this;
     }
@@ -160,16 +163,16 @@ public class ItemBuilder {
      * @param level The level
      */
     public ItemBuilder addEnchant(Enchantment ench, int level){
-        if (is.getType() != Material.ENCHANTED_BOOK) {
-            ItemMeta im = is.getItemMeta();
+        if (itemStack.getType() != Material.ENCHANTED_BOOK) {
+            ItemMeta im = itemStack.getItemMeta();
             im.addEnchant(ench, level, true);
-            is.setItemMeta(im);
+            itemStack.setItemMeta(im);
             return this;
         }
 
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
+        EnchantmentStorageMeta im = (EnchantmentStorageMeta) itemStack.getItemMeta();
         im.addStoredEnchant(ench, level, true);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -177,14 +180,14 @@ public class ItemBuilder {
      * @param enchantments The enchants to add.
      */
     public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments){
-        is.addEnchantments(enchantments);
+        itemStack.addEnchantments(enchantments);
         return this;
     }
     /**
      * Sets infinity durability on the item by setting the durability to Short.MAX_VALUE.
      */
     public ItemBuilder setInfinityDurability(){
-        is.setDurability(Short.MAX_VALUE);
+        itemStack.setDurability(Short.MAX_VALUE);
         return this;
     }
     /**
@@ -192,9 +195,9 @@ public class ItemBuilder {
      * @param lore The lore to set it to.
      */
     public ItemBuilder setLore(String... lore){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         im.setLore(Arrays.asList(lore));
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -202,9 +205,9 @@ public class ItemBuilder {
      * @param lore The lore to set it to.
      */
     public ItemBuilder setLore(List<String> lore) {
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -212,12 +215,12 @@ public class ItemBuilder {
      * @param line The lore to remove.
      */
     public ItemBuilder removeLoreLine(String line){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         if(!lore.contains(line))return this;
         lore.remove(line);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -225,12 +228,12 @@ public class ItemBuilder {
      * @param index The index of the lore line to remove.
      */
     public ItemBuilder removeLoreLine(int index){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         if(index<0||index>lore.size())return this;
         lore.remove(index);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -238,12 +241,12 @@ public class ItemBuilder {
      * @param line The lore line to add.
      */
     public ItemBuilder addLoreLine(String line){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>();
         if(im.hasLore())lore = new ArrayList<>(im.getLore());
         lore.add(line);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -252,11 +255,11 @@ public class ItemBuilder {
      * @param pos The index of where to put it.
      */
     public ItemBuilder addLoreLine(String line, int pos){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         lore.set(pos, line);
         im.setLore(lore);
-        is.setItemMeta(im);
+        itemStack.setItemMeta(im);
         return this;
     }
     /**
@@ -265,9 +268,9 @@ public class ItemBuilder {
      */
     public ItemBuilder setLeatherArmorColor(Color color){
         try{
-            LeatherArmorMeta im = (LeatherArmorMeta)is.getItemMeta();
+            LeatherArmorMeta im = (LeatherArmorMeta) itemStack.getItemMeta();
             im.setColor(color);
-            is.setItemMeta(im);
+            itemStack.setItemMeta(im);
         }catch(ClassCastException expected){}
         return this;
     }
@@ -276,6 +279,6 @@ public class ItemBuilder {
      * @return The itemstack created/modified by the ItemBuilder instance.
      */
     public ItemStack toItemStack(){
-        return is;
+        return itemStack;
     }
 }
