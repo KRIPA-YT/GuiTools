@@ -48,7 +48,7 @@ java {
 
 jar {
     compileJava.options.encoding = 'UTF-8'
-    destinationDirectory.set(file("D:\\Server\\Spigot 1.19.2\\plugins"))
+    //destinationDirectory.set(file("D:\\Server\\Spigot 1.19.2\\plugins"))
 }
 
 tasks.withType(JavaCompile).configureEach {
