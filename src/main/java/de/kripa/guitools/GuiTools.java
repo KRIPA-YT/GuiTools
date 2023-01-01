@@ -1,6 +1,7 @@
 package de.kripa.guitools;
 
 import de.kripa.guitools.anvilgui.AnvilGUI;
+import de.kripa.guitools.guicreator.itemedit.LoreEditGUI;
 import de.kripa.guitools.guicreator.itemselect.ItemSelectGUI;
 import de.kripa.guitools.history.PlayerHistoryEntry;
 import de.kripa.guitools.std.gui.EmptyGUI;
@@ -48,14 +49,10 @@ public final class GuiTools extends JavaPlugin implements Listener {
         String subCmd = args[0];
         System.arraycopy(args, 1, args, 0, args.length - 1);
         switch (subCmd) {
-            case "history":
-                appendHistory(p, args);
-                break;
-            case "anviltest":
-                anvilTest(p, args);
-                break;
-            default:
-                p.sendMessage(PREFIX + "No such subcommand exists.");
+            case "history" -> appendHistory(p, args);
+            case "anviltest" -> anvilTest(p, args);
+            case "loretest" -> new LoreEditGUI(p.getInventory().getItemInMainHand()).scheduleOpenGUI(p);
+            default -> p.sendMessage(PREFIX + "No such subcommand exists.");
         }
         return true;
     }

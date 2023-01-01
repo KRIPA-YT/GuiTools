@@ -1,6 +1,6 @@
 package de.kripa.guitools.guicreator.itemedit;
 
-import de.kripa.guitools.guicreator.ArrowBackElement;
+import de.kripa.guitools.guicreator.CloseBackElement;
 import de.kripa.guitools.guicreator.amountselect.AmountSelectGUI;
 import de.kripa.guitools.std.ItemBuilder;
 import de.kripa.guitools.std.element.button.GUIOpenButton;
@@ -35,7 +35,7 @@ public class ItemEditGUI extends EmptyGUI {
                 .setName("§aEdit Durability").addLoreLine("").addLoreLine("§eClick to edit").setDurability((short) 1)
                 .setItemFlags(ItemFlag.HIDE_ATTRIBUTES).toItemStack()), 7, 1);
 
-        this.setGUIElement(new ArrowBackElement(p), 4, 2);
+        this.setGUIElement(new CloseBackElement(p), 4, 2);
         return super.render(p);
     }
 }

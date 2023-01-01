@@ -56,6 +56,7 @@ public class SignInputButton implements GUIButton {
         return false;
     }
 
+    @SuppressWarnings("deprecated")
     protected void onSignComplete(SignCompleteEvent event, Player p, boolean playDing) {
         if (playDing) {
             this.playDing(p);

@@ -12,10 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Easily create itemstacks, without messing your hands.
@@ -38,7 +35,7 @@ public class ItemBuilder {
      * @param itemStack The itemstack to create the ItemBuilder over.
      */
     public ItemBuilder(ItemStack itemStack){
-        this.itemStack =itemStack;
+        this.itemStack = itemStack;
     }
     /**
      * Create a new ItemBuilder from scratch.
@@ -210,14 +207,19 @@ public class ItemBuilder {
         itemStack.setItemMeta(im);
         return this;
     }
+    public List<String> getLore() {
+        ItemMeta im = itemStack.getItemMeta();
+        return im.hasLore() ? im.getLore() : Collections.emptyList();
+    }
     /**
      * Remove a lore line.
      * @param line The lore to remove.
      */
     public ItemBuilder removeLoreLine(String line){
         ItemMeta im = itemStack.getItemMeta();
+        if (!im.hasLore()) return this;
         List<String> lore = new ArrayList<>(im.getLore());
-        if(!lore.contains(line))return this;
+        if (!lore.contains(line)) return this;
         lore.remove(line);
         im.setLore(lore);
         itemStack.setItemMeta(im);
@@ -229,6 +231,7 @@ public class ItemBuilder {
      */
     public ItemBuilder removeLoreLine(int index){
         ItemMeta im = itemStack.getItemMeta();
+        if (!im.hasLore()) return this;
         List<String> lore = new ArrayList<>(im.getLore());
         if(index<0||index>lore.size())return this;
         lore.remove(index);
@@ -243,7 +246,7 @@ public class ItemBuilder {
     public ItemBuilder addLoreLine(String line){
         ItemMeta im = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>();
-        if(im.hasLore())lore = new ArrayList<>(im.getLore());
+        if (im.hasLore()) lore = new ArrayList<>(im.getLore());
         lore.add(line);
         im.setLore(lore);
         itemStack.setItemMeta(im);
@@ -251,16 +254,76 @@ public class ItemBuilder {
     }
     /**
      * Add a lore line.
+     * @param pos The index of where to put it.
      * @param line The lore line to add.
+     */
+    public ItemBuilder addLoreLine(int pos, String line){
+        ItemMeta im = itemStack.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        if (im.hasLore()) lore = new ArrayList<>(im.getLore());
+        lore.add(pos, line);
+        im.setLore(lore);
+        itemStack.setItemMeta(im);
+        return this;
+    }
+    /**
+     * Add a multiple lore lines.
+     * @param lines The lore lines to add.
+     */
+    public ItemBuilder addLoreLines(String... lines) {
+        ItemMeta im = itemStack.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        if (im.hasLore()) lore = new ArrayList<>(im.getLore());
+        lore.addAll(List.of(lines));
+        im.setLore(lore);
+        itemStack.setItemMeta(im);
+        return this;
+    }
+    /**
+     * Add a multiple lore lines.
+     * @param lines The lore lines to add.
      * @param pos The index of where to put it.
      */
-    public ItemBuilder addLoreLine(String line, int pos){
+    public ItemBuilder addLoreLines(int pos, String... lines) {
         ItemMeta im = itemStack.getItemMeta();
-        List<String> lore = new ArrayList<>(im.getLore());
+        List<String> lore = new ArrayList<>();
+        if (im.hasLore()) lore = new ArrayList<>(im.getLore());
+        lore.addAll(pos, List.of(lines));
+        im.setLore(lore);
+        itemStack.setItemMeta(im);
+        return this;
+    }
+    /**
+     * Set a lore line
+     * @param line The lore line to set.
+     * @param pos The index of where to put it.
+     */
+    public ItemBuilder setLoreLine(int pos, String line) {
+        ItemMeta im = itemStack.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        if (im.hasLore()) {
+            lore = new ArrayList<>(im.getLore());
+        }
+        if (pos <= lore.size()) {
+            for (int i = 0; i < (pos + 1) - lore.size(); i++) {
+                lore.add("");
+            }
+        }
         lore.set(pos, line);
         im.setLore(lore);
         itemStack.setItemMeta(im);
         return this;
+    }
+    public String getLoreLine(int pos) {
+        ItemMeta im = itemStack.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        if (im.hasLore()) {
+            lore = new ArrayList<>(im.getLore());
+        }
+        if (pos >= lore.size()) {
+            return "";
+        }
+        return im.getLore().get(pos);
     }
     /**
      * Sets the armor color of a leather armor piece. Works only on leather armor pieces.

@@ -2,7 +2,7 @@ package de.kripa.guitools.guicreator.itemedit;
 
 import de.kripa.guitools.gui.GUIElement;
 import de.kripa.guitools.gui.GUIElementClickEvent;
-import de.kripa.guitools.guicreator.ArrowBackElement;
+import de.kripa.guitools.guicreator.CloseBackElement;
 import de.kripa.guitools.signgui.SignCompleteEvent;
 import de.kripa.guitools.std.ItemBuilder;
 import de.kripa.guitools.std.element.AirElement;
@@ -257,7 +257,7 @@ public class EnchantmentSelectGUI extends EmptyGUI {
         public Inventory render(Player p) {
             // Navigation
             this.setGUIElement(new GUIOpenButton(new ItemEditGUI(toEdit.clone()), toEdit), 4, 0);
-            this.setGUIElement(new ArrowBackElement(p), 3, 2);
+            this.setGUIElement(new CloseBackElement(p), 3, 2);
             this.setGUIElement(this.levelInput, 4, 2);
 
             switch (enchant.getMaxLevel()) {
@@ -376,7 +376,7 @@ public class EnchantmentSelectGUI extends EmptyGUI {
 
         this.setGUIElement(new GUIOpenButton(new ItemEditGUI(this.toEdit), this.toEdit), 4, 0);
 
-        this.setGUIElement(new ArrowBackElement(p, displayModeColorMappings.get(this.currentDisplayMode)), 3, 5);
+        this.setGUIElement(new CloseBackElement(p), 3, 5);
         this.setGUIElement(this.search, 4, 5);
         this.setGUIElement(this.sort, 5, 5);
 

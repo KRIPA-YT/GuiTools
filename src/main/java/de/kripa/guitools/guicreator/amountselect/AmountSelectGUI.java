@@ -1,7 +1,7 @@
 package de.kripa.guitools.guicreator.amountselect;
 
 import de.kripa.guitools.GuiManager;
-import de.kripa.guitools.guicreator.ArrowBackElement;
+import de.kripa.guitools.guicreator.CloseBackElement;
 import de.kripa.guitools.guicreator.itemedit.ItemEditGUI;
 import de.kripa.guitools.std.ItemBuilder;
 import de.kripa.guitools.std.element.EmptyElement;
@@ -48,7 +48,7 @@ public class AmountSelectGUI extends EmptyGUI {
 
         // Back arrow
         if (GuiManager.historyManager.hasHistory(p)) {
-            this.setGUIElement(new ArrowBackElement(p), 3, 2);
+            this.setGUIElement(new CloseBackElement(p), 3, 2);
         } else {
             this.setGUIElement(new EmptyElement(), 3, 2);
         }

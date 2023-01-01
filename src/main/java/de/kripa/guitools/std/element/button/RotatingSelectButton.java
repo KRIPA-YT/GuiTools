@@ -2,7 +2,6 @@ package de.kripa.guitools.std.element.button;
 
 import de.kripa.guitools.gui.GUIElementClickEvent;
 import de.kripa.guitools.std.ItemBuilder;
-import de.kripa.guitools.std.element.button.GUIButton;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 @Data
 public class RotatingSelectButton implements GUIButton {
+    @Setter
     private ItemStack icon;
     @Setter @Getter
     private String[] options;
@@ -33,7 +33,7 @@ public class RotatingSelectButton implements GUIButton {
     @Override
     public boolean onClick(GUIElementClickEvent e) {
         this.playDing(e.getPlayer());
-        this.selectedOption = (this.selectedOption + (e.isLeftClick() ? 1 : 2)) % options.length;
+        this.selectedOption = (this.selectedOption + (e.isLeftClick() ? 1 : (this.options.length - 1))) % this.options.length;
         return false;
     }
 

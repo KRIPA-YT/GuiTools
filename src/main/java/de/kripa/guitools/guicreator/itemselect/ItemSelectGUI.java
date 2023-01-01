@@ -1,10 +1,10 @@
 package de.kripa.guitools.guicreator.itemselect;
 
-import de.kripa.guitools.GuiManager;
-import de.kripa.guitools.guicreator.ArrowBackElement;
+import de.kripa.guitools.guicreator.CloseBackElement;
 import de.kripa.guitools.guicreator.amountselect.AmountSelectGUI;
 import de.kripa.guitools.std.ItemBuilder;
-import de.kripa.guitools.std.element.*;
+import de.kripa.guitools.std.element.AirElement;
+import de.kripa.guitools.std.element.EmptyElement;
 import de.kripa.guitools.std.element.button.GUIOpenButton;
 import de.kripa.guitools.std.element.button.RotatingSelectButton;
 import de.kripa.guitools.std.element.button.SignInputButton;
@@ -73,15 +73,9 @@ public class ItemSelectGUI extends EmptyGUI implements CommandExecutor {
 
     @Override
     public Inventory render(Player p) {
-
         // Search and back arrow
-        if (GuiManager.historyManager.hasHistory(p)) {
-            this.setGUIElement(this.search, 3, 5);
-            this.setGUIElement(new ArrowBackElement(p), 4, 5);
-        } else {
-            this.setGUIElement(new EmptyElement(), 3, 5);
-            this.setGUIElement(this.search, 4, 5);
-        }
+        this.setGUIElement(new CloseBackElement(p), 3, 5);
+        this.setGUIElement(this.search, 4, 5);
 
         // Sort Selector
         Material[] items = this.fetchItems(this.lastPage, this.search.getResult(), this.sortSelect.getSelectedOption());
