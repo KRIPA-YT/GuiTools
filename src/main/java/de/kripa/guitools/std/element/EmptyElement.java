@@ -25,7 +25,7 @@ public class EmptyElement implements GUIElement {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemBuilder(Material.getMaterial(color + "_STAINED_GLASS_PANE")).setName(ChatColor.GRAY + "").toItemStack();
+        return new ItemBuilder(Material.getMaterial(color.toUpperCase() + "_STAINED_GLASS_PANE")).setName(ChatColor.GRAY + "").toItemStack();
     }
 
     public void setColor(String color) {

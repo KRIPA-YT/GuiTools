@@ -8,11 +8,18 @@ import java.util.Arrays;
 
 public class EmptyGUI extends SimpleGUI {
     public EmptyGUI(@NonNull String title, int rows) {
-        super(title, generateFillerElementArray(rows * 9));
+        this(title, rows, "GRAY");
+    }
+    public EmptyGUI(@NonNull String title, int rows, @NonNull String color) {
+        super(title, generateFillerElementArray(rows * 9, color));
     }
 
-    private static GUIElement[] generateFillerElementArray(int length) {
-        return Arrays.stream(new GUIElement[length]).map(guiElement -> guiElement = new EmptyElement()).toArray(GUIElement[]::new);
+    protected static GUIElement[] generateFillerElementArray(int length) {
+        return generateFillerElementArray(length, "GRAY");
+    }
+
+    protected static GUIElement[] generateFillerElementArray(int length, String color) {
+        return Arrays.stream(new GUIElement[length]).map(guiElement -> guiElement = new EmptyElement(color)).toArray(GUIElement[]::new);
     }
 
     protected void reset() {
