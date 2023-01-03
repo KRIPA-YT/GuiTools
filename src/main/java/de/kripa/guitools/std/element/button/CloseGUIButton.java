@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CloseGUIButton implements GUIButton {
-    @Getter private ItemStack icon = new ItemBuilder(Material.BARRIER).setName("§cClose").toItemStack();
+    @Getter private ItemStack icon = new ItemBuilder(Material.BARRIER).setName("§cClose").addLoreLine("§7Close the menu").toItemStack();
 
     @Override
     public boolean onClick(GUIElementClickEvent e) {
