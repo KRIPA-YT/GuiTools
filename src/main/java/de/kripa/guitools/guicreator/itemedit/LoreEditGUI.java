@@ -16,7 +16,6 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -275,25 +274,39 @@ public class LoreEditGUI extends EmptyGUI {
         }
     }
 
-    private class RemoveEmptyLineButton implements GUIButton {
+    private class ClearLineButton implements GUIButton {
         @Override
         public boolean onClick(GUIElementClickEvent e) {
             Player p = e.getPlayer();
-            if (new ItemBuilder(toEdit).getLore().stream().filter(String::isBlank).toList().size() <= 0) {
-                p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 0.1F);
-                p.sendMessage(PREFIX + "Last line of item lore is not empty!");
-                return false;
-            }
-
             this.playDing(p);
-            toEdit = new ItemBuilder(toEdit).removeLoreLine(new ItemBuilder(toEdit).getLore().size() - 1).toItemStack();
+            toEdit = new ItemBuilder(toEdit).setLoreLine(loreLineSelectButton.getSelectedOption(), "").toItemStack();
+            return false;
+        }
+
+        @Override
+        public ItemStack getIcon() {
+            return new ItemBuilder(Material.YELLOW_CONCRETE)
+                    .setName("§6Clear lore line")
+                    .addLoreLine("")
+                    .addLoreLine("§eClick to clear!")
+                    .toItemStack();
+        }
+    }
+
+    private class RemoveLineButton implements GUIButton {
+        @Override
+        public boolean onClick(GUIElementClickEvent e) {
+            Player p = e.getPlayer();
+            this.playDing(p);
+            toEdit = new ItemBuilder(toEdit).removeLoreLine(loreLineSelectButton.getSelectedOption()).toItemStack();
+            loreLineSelectButton.setSelectedOption(Math.max(Math.min(loreLineSelectButton.getSelectedOption(), new ItemBuilder(toEdit).getLore().size() - 1), 0));
             return false;
         }
 
         @Override
         public ItemStack getIcon() {
             return new ItemBuilder(Material.RED_CONCRETE)
-                    .setName("§cRemove empty lore line")
+                    .setName("§cRemove lore line")
                     .addLoreLine("")
                     .addLoreLine("§eClick to remove!")
                     .toItemStack();
@@ -325,7 +338,8 @@ public class LoreEditGUI extends EmptyGUI {
         this.setGUIElement(this.inputGUISelectButton, 3, 1);
         this.setGUIElement(this.inputTypeSelectButton, 5, 1);
         this.setGUIElement(new AppendEmptyLineButton(), 7, 0);
-        this.setGUIElement(new RemoveEmptyLineButton(), 7, 2);
+        this.setGUIElement(new ClearLineButton(), 7, 1);
+        this.setGUIElement(new RemoveLineButton(), 7, 2);
         return super.render(p);
     }
 }
